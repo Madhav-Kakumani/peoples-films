@@ -11,7 +11,7 @@ Below are the instructions to do local build.
 6. Install pipenv
 7. Using pipenv - install the libraries in Pipfile
    - pipenv install --dev (installs everything under [dev-packages])
-8. Point preference > project > python interpreter to virtual environment
+8. In pycharm: go to preference > project > python interpreter and choose virtual environment created in step 5
 
 ## Project structure
 people                                                                                                               
