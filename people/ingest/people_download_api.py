@@ -21,10 +21,10 @@ def extract_people(url: str) -> tuple:
     return next_url, info
 
 
-def load_data(people1: list) -> bool:
+def load_people_data(people_list: list) -> bool:
     """
     Load all the people returned from the API into mysql table
-    :param people1: List of all the people across all the pages
+    :param people_list: List of all the people across all the pages
     :return: if load is successful returning 'True'
     """
     try:
@@ -44,7 +44,7 @@ def load_data(people1: list) -> bool:
                         starships JSON, vehicles JSON, url VARCHAR(255), 
                         created VARCHAR(255), edited VARCHAR(255))""")
 
-        for pdata in people1:
+        for pdata in people_list:
             film_json = json.dumps(pdata["films"])
             species_json = json.dumps(pdata["species"])
             starships_json = json.dumps(pdata["starships"])
@@ -83,7 +83,7 @@ def transform_aggregate_people() -> None:
                                              password='Madhavarao1')
 
         mycursor = connection.cursor()
-        mycursor.execute("""create table if not exists people_temp_data 
+        mycursor.execute("""create table if not exists people_type_data 
                             (name varchar(255),
                             birth_year varchar(255),
                             films varchar(255))""")
@@ -105,7 +105,7 @@ def transform_aggregate_people() -> None:
                             birth_year float,
                             birth_year_battle varchar(255))""")
 
-        mycursor.execute("""insert into people_temp_data
+        mycursor.execute("""insert into people_type_data
                             (select name, birth_year, films from people where birth_year != 'unknown')""")
 
         mycursor.execute("""insert into people_transform_data
@@ -116,12 +116,12 @@ def transform_aggregate_people() -> None:
                             ELSE ''
                             END as birth_year,
                             CASE
-                            WHEN birth_year LIKE '%BBY' THEN 'BBY'
-                            WHEN birth_year LIKE '%ABY' THEN 'ABY'
+                            WHEN p.birth_year LIKE '%BBY' THEN 'BBY'
+                            WHEN p.birth_year LIKE '%ABY' THEN 'ABY'
                             ELSE ''
                             END AS birth_year_battle,
                             TRIM(REPLACE(REPLACE(REPLACE(j.films, '[', ""), ']', ""), '"', "")) as films
-                            from people_temp_data as p
+                            from people_type_data as p
                             join json_table(
                                 replace(json_array(p.films), ',', '","'),
                                 '$[*]' columns (films varchar(50) path '$')
@@ -176,7 +176,7 @@ def call_api() -> list:
         if next_url is None:
             break
         else:
-            people_data1 = [i for i in info['results']]
-            people_data.extend(people_data1)
+            people_ndata = [i for i in info['results']]
+            people_data.extend(people_ndata)
 
     return people_data
