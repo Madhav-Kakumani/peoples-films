@@ -14,8 +14,8 @@ Below are the instructions to do local build.
 8. Point preference > project > python interpreter to virtual environment
 
 ## Project structure
-people
-|__ingest: contains all common methods used to call people API, load and transform/aggregate data in mysql tables
+people                                                                                                               
+|__ingest: contains all common methods used to call people API, load and transform/aggregate data in mysql tables              
 |__script: contains script to call the methods to load raw data into mysql table and table to capture old character by film
 
 ## Script execution
