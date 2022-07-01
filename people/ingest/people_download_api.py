@@ -44,6 +44,8 @@ def load_people_data(people_list: list) -> bool:
                         starships JSON, vehicles JSON, url VARCHAR(255), 
                         created VARCHAR(255), edited VARCHAR(255))""")
 
+        mycursor.execute("""truncate table people""")
+
         for pdata in people_list:
             film_json = json.dumps(pdata["films"])
             species_json = json.dumps(pdata["species"])
@@ -104,6 +106,11 @@ def transform_aggregate_people() -> None:
                             films varchar(255),
                             birth_year float,
                             birth_year_battle varchar(255))""")
+
+        mycursor.execute("""truncate table people_type_data""")
+        mycursor.execute("""truncate table people_transform_data""")
+        mycursor.execute("""truncate table people_film_birth_agg""")
+        mycursor.execute("""truncate table old_character_by_film""")
 
         mycursor.execute("""insert into people_type_data
                             (select name, birth_year, films from people where birth_year != 'unknown')""")
